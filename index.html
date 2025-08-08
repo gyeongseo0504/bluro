@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>bluro | 개발자를 위한 진짜 하드웨어 셀렉트샵</title>
+  <link href="https://fonts.googleapis.com/css?family=Pretendard:400,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-blue: #2196F3;
+      --dark-blue: #1976D2;
+      --light-blue: #E3F2FD;
+      --border-gray: #e5e7eb;
+      --text-gray: #333;
+      --font: 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #fff; color: var(--text-gray); font-family: var(--font);}
+    header { background: var(--light-blue); padding: 1.2rem 0; text-align: center; box-shadow: 0 2px 8px #2196f30d;}
+    .logo-img {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .logo {
+      display: inline-block;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--main-blue);
+      vertical-align: middle;
+    }
+    nav { margin-top: 10px;}
+    nav a { color: var(--dark-blue); font-weight: 500; text-decoration: none; margin: 0 1.5rem; transition: color 0.2s;}
+    nav a:hover { color: var(--main-blue);}
+    main { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 3rem 1rem;}
+    .hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: var(--light-blue); border-radius: 18px; padding: 2.5rem 2rem; margin-bottom: 2.5rem; box-shadow: 0 4px 16px #2196f31a;}
+    .hero-text { flex: 1 1 300px; min-width: 230px;}
+    .hero-title { font-size: 2.25rem; color: var(--dark-blue); font-weight: 700; margin-bottom: 1rem; letter-spacing: 1.5px;}
+    .hero-desc { font-size: 1.18rem; margin-bottom: 1.5rem; color: #3a649c;}
+    .hero-img { flex: 1 1 280px; min-width: 180px; text-align: right;}
+    .hero-img img { width: 235px; border-radius: 18px; box-shadow: 0 4px 16px #2196f31a;}
+    .search-bar-wrap {
+      display: flex; justify-content: flex-end; margin-bottom: 1.3rem;
+    }
+    .search-bar {
+      border: 1px solid var(--main-blue); border-radius: 8px; padding: 0.55em 1em; font-size: 1rem;
+      font-family: inherit; width: 220px; margin-left: auto; transition: border 0.16s;
+    }
+    .search-bar:focus { border-color: var(--dark-blue);}
+    .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;}
+    .product-card { background: #fff; border: 1px solid var(--border-gray); border-radius: 14px; box-shadow: 0 2px 8px #1976d215; padding: 1.3rem 1rem 1rem 1rem; transition: box-shadow 0.18s; display: flex; flex-direction: column; align-items: center;}
+    .product-card:hover { box-shadow: 0 8px 24px #1976d22a;}
+    .product-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 9px; margin-bottom: 1.1rem; cursor: pointer;}
+    .product-name { font-size: 1.12rem; font-weight: 600; color: var(--main-blue); margin-bottom: 0.45rem; text-align: center;}
+    .product-desc { font-size: 0.99rem; color: #46679c; text-align: center; margin-bottom: 0.6rem;}
+    .product-price { font-size: 1.13rem; font-weight: 700; color: var(--dark-blue); margin-bottom: 0.8rem;}
+    .card-btns { display: flex; gap: 0.8rem; width: 100%; justify-content: center;}
+    .detail-btn, .inq-btn { border: none; outline: none; border-radius: 7px; padding: 0.45rem 1.2rem; font-size: 0.99rem; font-family: inherit; font-weight: 600; cursor: pointer; transition: background 0.16s;}
+    .detail-btn { background: var(--main-blue); color: #fff;}
+    .detail-btn:hover { background: var(--dark-blue);}
+    .inq-btn { background: #fff; color: var(--dark-blue); border: 1px solid var(--main-blue);}
+    .inq-btn:hover { background: var(--light-blue);}
+    .coming-soon { color: #a8adb9; font-size: 1.09rem; font-weight: 500; margin: 1.2rem 0 0.5rem 0; }
+    .modal-bg { position: fixed; z-index: 10; left: 0; top: 0; width: 100vw; height: 100vh; background: #0006; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.22s;}
+    .modal-bg.active { visibility: visible; opacity: 1;}
+    .modal { background: #fff; border-radius: 15px; padding: 2.2rem 2rem 1.3rem 2rem; min-width: 320px; max-width: 94vw; box-shadow: 0 8px 32px #1976d255; position: relative;}
+    .modal h2 { color: var(--main-blue); margin-bottom: 1.1rem;}
+    .modal form { display: flex; flex-direction: column; gap: 1.1rem;}
+    .modal input, .modal textarea { border: 1px solid var(--border-gray); border-radius: 6px; padding: 0.75em; font-size: 1em; font-family: inherit; width: 100%;}
+    .modal textarea { resize: vertical; }
+    .modal .submit-btn { background: var(--main-blue); color: #fff; border: none; font-weight: 600; padding: 0.6em 0; border-radius: 6px; font-size: 1.08em;}
+    .modal .close-btn { position: absolute; right: 1.2rem; top: 1.1rem; font-size: 1.5em; color: #c5c5c5; background: none; border: none; cursor: pointer;}
+    .modal .close-btn:hover { color: var(--main-blue);}
+    .modal .result-msg { color: var(--dark-blue); margin-top: 1.5rem;}
+    .detail-img { width: 220px; height: 220px; object-fit: cover; border-radius: 15px; margin-bottom: 1.2rem;}
+    .detail-title { font-size: 1.35rem; color: var(--dark-blue); font-weight: bold;}
+    .detail-price { color: var(--main-blue); font-size: 1.18rem; font-weight: 600; margin-bottom: 0.7rem;}
+    .detail-desc { color: #46679c; font-size: 1.06rem; margin-bottom: 1.2rem;}
+    .modal .inq-btn { width: 100%; font-size: 1.06rem; margin-top: 0.8rem;}
+    .not-found { grid-column: 1/-1; text-align: center; color: #aaa; padding: 2.5rem 0 1.5rem 0; font-size: 1.09rem;}
+    footer { margin-top: 2rem; padding: 2rem 1rem 1.4rem 1rem; text-align: center; font-size: 1.03rem; background: var(--light-blue); color: #2a477d; border-radius: 14px 14px 0 0;}
+    @media (max-width: 720px) {
+      .hero { flex-direction: column; text-align: left; padding: 1.2rem 0.6rem;}
+      .hero-img { text-align: center; margin-top: 1.2rem;}
+      .hero-img img { width: 170px;}
+      main { padding: 1.2rem 0.4rem 2.4rem 0.4rem; }
+      .search-bar { width: 100%;}
+      .product-list { gap: 1rem;}
+      .detail-img { width: 140px; height: 140px;}
+      .modal { padding: 1.2rem 0.6rem 0.8rem 0.6rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo-img">
+      <!-- bluro SVG 로고 (파란 서클+화이트 b) -->
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="20" fill="#2196F3"/>
+        <text x="22" y="28" text-anchor="middle" fill="#fff" font-family="Pretendard, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2">b</text>
+      </svg>
+    </span>
+    <span class="logo">bluro</span>
+    <nav>
+      <a href="#products">상품목록</a>
+      <a href="#inquire">문의하기</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <div class="hero-title">개발자를 위한 진짜 하드웨어 셀렉트샵, <span style="color:var(--main-blue)">bluro</span></div>
+        <div class="hero-desc">AI, 로봇, 임베디드, 자동차까지<br>현장에서 진짜 쓸 수 있는 전문 전자제품만을 큐레이션합니다.</div>
+        <a href="#products" class="detail-btn" style="padding:0.6em 1.5em; font-size:1.08em;">상품 바로가기</a>
+      </div>
+      <div class="hero-img">
+        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80" alt="전자제품" />
+      </div>
+    </section>
+    <div class="search-bar-wrap">
+      <input type="text" id="searchInput" class="search-bar" placeholder="상품명 또는 키워드로 검색..." autocomplete="off"/>
+    </div>
+    <h2 id="products" style="font-size:1.5rem; color:var(--main-blue); margin-bottom:1.2rem;">판매중인 상품</h2>
+    <div class="product-list" id="productList"></div>
+  </main>
+  <!-- 상품 상세 모달 -->
+  <div class="modal-bg" id="detailModal">
+    <div class="modal" id="detailModalContent"></div>
+  </div>
+  <!-- 문의 모달 -->
+  <div class="modal-bg" id="inqModal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal('inqModal')">&times;</button>
+      <h2>상품 문의</h2>
+      <form id="inqForm">
+        <input type="hidden" name="product" />
+        <label>이름 <input type="text" name="name" required /></label>
+        <label>이메일 <input type="email" name="email" required /></label>
+        <label>문의 내용 <textarea name="message" rows="3" required></textarea></label>
+        <button type="submit" class="submit-btn">문의하기</button>
+        <div class="result-msg" id="inqResult"></div>
+      </form>
+    </div>
+  </div>
+  <footer>
+    <div>© 2025 bluro. All rights reserved.<br/>
+      문의: <a href="mailto:bluro@demo.com" style="color:var(--dark-blue); text-decoration:underline;">bluro@demo.com</a>
+    </div>
+  </footer>
+  <script>
+    // 상품 데이터 (5개, 4~5번은 준비중)
+    const products = [
+      {
+        name: "잿슨 나노 개발자 키트 (Jetson Nano Developer Kit)",
+        img: "https://cdn.riotgames.com/devrel/jetson_nano.png",
+        price: 200000,
+        short: "딥러닝·AI·로봇 개발에 최적화된 NVIDIA Jetson Nano 공식 키트",
+        desc: "NVIDIA Jetson Nano 개발자 키트는 저전력·고성능 AI 컴퓨팅이 필요한 임베디드 비전, 딥러닝, 로봇 프로젝트에 최적화된 공식 플랫폼입니다. 4GB RAM, 쿼드코어 Cortex-A57 CPU, 128코어 Maxwell GPU, GPIO/I2C/UART 등 확장성. JetPack SDK 지원.",
+        search: "jetson nano 잿슨 나노 개발자 kit nvidia ai 딥러닝 로봇"
+      },
+      {
+        name: "USB-CAN 어댑터 (SocketCAN 지원)",
+        img: "https://www.esd.eu/_Resources/Persistent/9/d/2/7/9d279ab72a212c2b128e5f9dcd5e2115e0733a77/ESD-CAN-USB-Mini-Front.jpg",
+        price: 100000,
+        short: "리눅스 CAN 통신·SocketCAN 완벽 지원 USB 어댑터",
+        desc: "차량, 산업용, 로봇 분야에서 필수적인 CAN 통신을 리눅스 환경에서 손쉽게 구현할 수 있는 USB-CAN 어댑터입니다. SocketCAN 지원, 드라이버 설치 불필요, 플러그&플레이, 최대 1Mbps 통신 속도, CAN 분석 SW 호환.",
+        search: "usb can socketcan 리눅스 linux 차량 통신 usbcan"
+      },
+      {
+        name: "BL42S-24040N (40W)",
+        img: "https://robotdyn.com/media/catalog/product/cache/eb1f507ff90cda32d8ecbeae9a7b8462/b/l/bl42s-24040n.jpg",
+        price: 50000,
+        short: "소형 BLDC/서보/로봇용 40W급 BL42S-24040N",
+        desc: "고정밀 BLDC 모터, 40W, 24V 입력, 4000rpm, 42mm 사이즈. 로봇, 자동화 설비, CNC 등 다양한 메이커 프로젝트에 적합. 호환 드라이버 별도.",
+        search: "bl42s 24040n 40w bldc 모터 서보 로봇"
+      },
+      {
+        name: "상품 준비중 (Coming Soon)",
+        img: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+        price: null,
+        short: "",
+        desc: "더 많은 전문 전자제품이 곧 업데이트될 예정입니다. 기대해 주세요!",
+        search: "준비중 coming soon 상품"
+      },
+      {
+        name: "상품 준비중 (Coming Soon)",
+        img: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+        price: null,
+        short: "",
+        desc: "더 많은 전문 전자제품이 곧 업데이트될 예정입니다. 기대해 주세요!",
+        search: "준비중 coming soon 상품"
+      }
+    ];
+
+    // 상품 리스트 생성 (검색 지원)
+    function renderProducts(filter = '') {
+      const list = document.getElementById('productList');
+      const q = filter.trim().toLowerCase();
+      // 필터링
+      const filtered = q
+        ? products.filter(p =>
+            (p.name + ' ' + (p.short || '') + ' ' + (p.search || '')).toLowerCase().includes(q)
+          )
+        : products;
+      list.innerHTML = '';
+      if (!filtered.length) {
+        list.innerHTML = `<div class="not-found">검색 결과가 없습니다.</div>`;
+        return;
+      }
+      filtered.forEach((p, i) => {
+        if (p.price === null) {
+          list.innerHTML += `
+            <div class="product-card">
+              <img src="${p.img}" alt="준비중" />
+              <div class="product-name">${p.name}</div>
+              <div class="coming-soon">상품 준비중</div>
+            </div>
+          `;
+        } else {
+          list.innerHTML += `
+            <div class="product-card">
+              <img src="${p.img}" alt="${p.name}" onclick="showDetail(${i})" />
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.short}</div>
+              <div class="product-price">${p.price.toLocaleString()}원</div>
+              <div class="card-btns">
+                <button class="detail-btn" onclick="showDetail(${i})">자세히 보기</button>
+                <button class="inq-btn" onclick="openInquiry('${p.name}')">문의</button>
+              </div>
+            </div>
+          `;
+        }
+      });
+    }
+    renderProducts();
+
+    // 상품 상세 모달
+    function showDetail(idx) {
+      const p = products[idx];
+      if (p.price === null) return; // 준비중 상품 클릭 X
+      const detailModal = document.getElementById('detailModal');
+      const modalContent = document.getElementById('detailModalContent');
+      modalContent.innerHTML = `
+        <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
+        <img class="detail-img" src="${p.img}" alt="${p.name}" />
+        <div class="detail-title">${p.name}</div>
+        <div class="detail-price">${p.price.toLocaleString()}원</div>
+        <div class="detail-desc">${p.desc}</div>
+        <button class="inq-btn" onclick="openInquiry('${p.name}')" style="margin-top:1rem;">이 상품 문의하기</button>
+      `;
+      detailModal.classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+    // 문의 모달
+    function openInquiry(product) {
+      closeModal('detailModal');
+      const inqModal = document.getElementById('inqModal');
+      inqModal.querySelector('input[name="product"]').value = product;
+      inqModal.querySelector('#inqResult').textContent = '';
+      inqModal.classList.add('active');
+    }
+    // 문의 폼 이벤트
+    document.getElementById('inqForm').onsubmit = function(e){
+      e.preventDefault();
+      document.getElementById('inqResult').textContent = "문의가 접수되었습니다! (데모)";
+      setTimeout(()=>closeModal('inqModal'), 1700);
+      this.reset();
+    };
+    // 검색 기능 연결
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      renderProducts(e.target.value);
+    });
+  </script>
+</body>
+</html>
